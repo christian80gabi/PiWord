@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="PiWord.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:PiWord.Pages"
+    Shell.FlyoutBehavior="Disabled">
+
+    <TabBar>
+        <Tab Title="Home" Icon="{StaticResource TabOne}">
+            <ShellContent
+                Title="Home"
+                ContentTemplate="{DataTemplate pages:HomePage}"
+                Route="HomePage" />
+        </Tab>
+        <Tab Title="Favorites" Icon="{StaticResource TabTwo}">
+            <ShellContent
+                Title="Favorites"
+                ContentTemplate="{DataTemplate pages:FavoritesPage}"
+                Route="FavoritePage" />
+        </Tab>
+    </TabBar>
+
+</Shell>
