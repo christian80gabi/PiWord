@@ -8,7 +8,7 @@ namespace PiWord.Models
 
         public Dictionary()
         {
-            this.RetrieveWords();
+            this.Words = RetrieveWords();
         }
 
         internal Word Random()
@@ -18,19 +18,18 @@ namespace PiWord.Models
             return this.Words[index];
         }
 
-        private void RetrieveWords()
+        private List<Word> RetrieveWords()
         {
-            // const string fileName = "dictionary.json";
-            // var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database", fileName);
-            const string filePath = "C:\\Users\\chris\\Documents\\workspaces\\ASP.NET\\PiWord\\Database\\dictionary.json";
+            const string fileName = "dictionary.json";
+            using var stream = FileSystem.OpenAppPackageFileAsync(fileName);
             var words = new List<Word>();
 
-            using (var reader = new StreamReader(filePath))
+            using (var reader = new StreamReader(stream.Result))
             {
-                var json = reader.ReadToEnd();
+                var content = reader.ReadToEnd();
                 var regex = new Regex(@"^[^a-zA-Z0-9]*|[^a-zA-Z0-9]*$");
 
-                var lines = json.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = content.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var line in lines)
                 {
                     var parts = line.Split(new[] { " : " }, StringSplitOptions.RemoveEmptyEntries);
@@ -41,8 +40,15 @@ namespace PiWord.Models
                     words.Add(word);
                 }
             }
+            return words;
+        }
 
-            this.Words = words;
+        public static async Task<string> ReadTextFile(string filePath)
+        {
+            using var stream = await FileSystem.OpenAppPackageFileAsync(filePath);
+            using var reader = new StreamReader(stream);
+
+            return reader.ReadToEnd();
         }
 
     }
